@@ -1,16 +1,14 @@
 cytoscape-affinity-propagation
 ================================================================================
 
+![Screenshot of clusters returned from affinity propagation algorithm](./demo-img.png?raw=true "Screenshot of clusters returned from affinity propagation algorithm")
 
-## Description
-
-A Cytoscape.js extension for the affinity propagation algorithm
+An affinity propagation clustering algorithm for Cytoscape.js.
 
 
 ## Dependencies
 
- * Cytoscape.js ^x.y.z
- * <List your dependencies here please>
+ * Cytoscape.js  >=2.6.12
 
 
 ## Usage instructions
@@ -18,22 +16,22 @@ A Cytoscape.js extension for the affinity propagation algorithm
 Download the library:
  * via npm: `npm install cytoscape-affinity-propagation`,
  * via bower: `bower install cytoscape-affinity-propagation`, or
- * via direct download in the repository (probably from a tag).
+ * via direct download in the repository.
 
 `require()` the library as appropriate for your project:
 
 CommonJS:
 ```js
 var cytoscape = require('cytoscape');
-var affinity-propagation = require('cytoscape-affinity-propagation');
+var affinityPropagation = require('cytoscape-affinity-propagation');
 
-affinity-propagation( cytoscape ); // register extension
+affinityPropagation( cytoscape ); // register extension
 ```
 
 AMD:
 ```js
-require(['cytoscape', 'cytoscape-affinity-propagation'], function( cytoscape, affinity-propagation ){
-  affinity-propagation( cytoscape ); // register extension
+require(['cytoscape', 'cytoscape-affinity-propagation'], function( cytoscape, affinityPropagation ){
+  affinityPropagation( cytoscape ); // register extension
 });
 ```
 
@@ -45,23 +43,13 @@ Plain HTML/JS has the extension registered for you automatically, because no `re
 Please briefly describe your API here:
 
 ```js
-cy.affinity-propagation({
-  foo: 'bar', // some option that does this
-  baz: 'bat' // some options that does that
-  // ... and so on
+cy.elements().affinityPropagation({
+    preference: 'median',   // suitability of a data point to serve as an exemplar
+    damping: 0.8,           // damping factor between [0.5, 1)
+    maxIterations: 1000,    // max number of iterations to run
+    convIterations: 100     // min number of iterations to run in order for clustering to stop
 });
 ```
-
-Or maybe if you have a collection extension:
-
-```js
-cy.elements().test({
-  foo: 'bar', // some option that does this
-  baz: 'bat' // some options that does that
-  // ... and so on
-});
-```
-
 
 ## Publishing instructions
 
