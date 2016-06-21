@@ -8,7 +8,7 @@ An affinity propagation clustering algorithm for Cytoscape.js.
 
 ## Dependencies
 
- * Cytoscape.js  >=2.6.12
+ * Cytoscape.js >= 2.6.12
 
 
 ## Usage instructions
@@ -39,8 +39,6 @@ Plain HTML/JS has the extension registered for you automatically, because no `re
 
 
 ## API
-
-Please briefly describe your API here:
 
 ```js
 cy.elements().affinityPropagation({

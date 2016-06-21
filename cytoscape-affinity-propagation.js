@@ -1,7 +1,7 @@
 ;(function(){ 'use strict';
 
   // Implemented from the reference library: https://github.com/juhis/affinity-propagation
-  // Helpful resource: http://www.psi.toronto.edu/affinitypropagation/faq.html
+  // Additional reference: http://www.psi.toronto.edu/affinitypropagation/faq.html
 
   var defaults = {
     preference: 'median', // suitability of a data point to serve as an exemplar
@@ -78,13 +78,12 @@
 
   var assignClusters = function( n, S, exemplars, nodes, id2position ) {
     var clusters = [];
-    var i, ei;
 
-    for ( i = 0; i < n; i++ ) {
+    for ( var i = 0; i < n; i++ ) {
       var index = -1;
       var max = -Infinity;
 
-      for ( ei = 0; ei < exemplars.length; ei++ ) {
+      for ( var ei = 0; ei < exemplars.length; ei++ ) {
         var e = exemplars[ei];
         if ( S[i * n + e] > max ) {
           index = e;
@@ -94,7 +93,7 @@
       clusters.push(index);
     }
 
-    for (ei = 0; ei < exemplars.length; ei++) {
+    for (var ei = 0; ei < exemplars.length; ei++) {
       clusters[ exemplars[ei] ] = exemplars[ei];
     }
 
@@ -105,10 +104,10 @@
 
     var clusters = assignClusters( n, S, exemplars );
 
-    for (var ei = 0; ei < exemplars.length; ei++) {
+    for ( var ei = 0; ei < exemplars.length; ei++ ) {
 
       var ii = [];
-      for (var c = 0; c < clusters.length; c++) {
+      for ( var c = 0; c < clusters.length; c++ ) {
         if (clusters[c] === exemplars[ei]) {
           ii.push(c);
         }
@@ -116,12 +115,12 @@
 
       var maxI = -1;
       var maxSum = -Infinity;
-      for (var i = 0; i < ii.length; i++) {
+      for ( var i = 0; i < ii.length; i++ ) {
         var sum = 0;
-        for (var j = 0; j < ii.length; j++) {
+        for ( var j = 0; j < ii.length; j++ ) {
           sum += S[ii[j] * n + ii[i]];
         }
-        if (sum > maxSum) {
+        if ( sum > maxSum ) {
           maxI = i;
           maxSum = sum;
         }
@@ -140,7 +139,6 @@
     var nodes = this.nodes();
     var edges = this.edges();
     var opts  = {};
-    var i, j;
 
     // Set parameters of algorithm:
     setOptions( opts, options );
@@ -165,7 +163,7 @@
 
     // Initialize and build S similarity matrix
     S  = new Array(n2);
-    for ( i = 0; i < n2; i++ ) {
+    for ( var i = 0; i < n2; i++ ) {
       S[i] = -Infinity;
     }
 
@@ -178,19 +176,19 @@
 
     // Place preferences on the diagonal of S
     p = getPreference( S, opts.preference, n );
-    for ( i = 0; i < n; i++ ) {
+    for ( var i = 0; i < n; i++ ) {
       S[i * n + i] = p;
     }
 
     // Initialize R responsibility matrix
     R = new Array(n2);
-    for ( i = 0; i < n2; i++ ) {
+    for ( var i = 0; i < n2; i++ ) {
       R[i] = 0.0;
     }
 
     // Initialize A availability matrix
     A = new Array(n2);
-    for ( i = 0; i < n2; i++ ) {
+    for ( var i = 0; i < n2; i++ ) {
       A[i] = 0.0;
     }
 
@@ -198,14 +196,14 @@
     var Rp  = new Array(n);
     var se  = new Array(n);
 
-    for ( i = 0; i < n; i ++ ) {
+    for ( var i = 0; i < n; i ++ ) {
       old[i] = 0.0;
       Rp[i]  = 0.0;
       se[i]  = 0;
     }
 
     var e = new Array(n * opts.convIterations);
-    for ( i = 0; i < e.length; i++ ) {
+    for ( var i = 0; i < e.length; i++ ) {
       e[i] = 0;
     }
 
@@ -213,28 +211,29 @@
     for ( iter = 0; iter < opts.maxIterations; iter++ ) { // main algorithmic loop
 
       // Update R responsibility matrix
-      for (var i = 0; i < n; i++) {
+      for ( var i = 0; i < n; i++ ) {
 
         var max = -Infinity,
             max2 = -Infinity,
             maxI = -1,
             AS = 0.0;
 
-        for (var j = 0; j < n; j++) {
+        for ( var j = 0; j < n; j++ ) {
 
           old[j] = R[i * n + j];
 
           AS = A[i * n + j] + S[i * n + j];
-          if (AS >= max) {
+          if ( AS >= max ) {
             max2 = max;
             max = AS;
             maxI = j
-          } else if (AS > max2) {
+          } 
+          else if ( AS > max2 ) {
             max2 = AS
           }
         }
 
-        for (var j = 0; j < n; j++) {
+        for ( var j = 0; j < n; j++ ) {
           R[i * n + j] = (1 - opts.damping) * (S[i * n + j] - max) + opts.damping * old[j]
         }
 
@@ -242,11 +241,11 @@
       }
 
       // Update A availability matrix
-      for (var i = 0; i < n; i++) {
+      for ( var i = 0; i < n; i++ ) {
 
         var sum = 0;
 
-        for (var j = 0; j < n; j++) {
+        for ( var j = 0; j < n; j++ ) {
           old[j] = A[j * n + i];
           Rp[j] = Math.max(0, R[j * n + i]);
           sum += Rp[j]
@@ -256,7 +255,7 @@
         Rp[i] = R[i * n + i];
         sum += Rp[i];
 
-        for (var j = 0; j < n; j++) {
+        for ( var j = 0; j < n; j++ ) {
           A[j * n + i] = (1 - opts.damping) * Math.min(0, sum - Rp[j]) + opts.damping * old[j]
         }
         A[i * n + i] = (1 - opts.damping) * (sum - Rp[i]) + opts.damping * old[i]
@@ -264,26 +263,26 @@
 
       // Check for convergence
       var K = 0;
-      for (var i = 0; i < n; i++) {
+      for ( var i = 0; i < n; i++ ) {
         var E = A[i * n + i] + R[i * n + i] > 0 ? 1 : 0;
         e[(iter % opts.convIterations) * n + i] = E;
         K += E
       }
 
-      if (K > 0 && (iter >= opts.convIterations - 1 || iter == opts.maxIterations - 1)) {
+      if ( K > 0 && (iter >= opts.convIterations - 1 || iter == opts.maxIterations - 1) ) {
 
         var sum = 0;
-        for (var i = 0; i < n; i++) {
+        for ( var i = 0; i < n; i++ ) {
           se[i] = 0;
-          for (var j = 0; j < opts.convIterations; j++) {
+          for ( var j = 0; j < opts.convIterations; j++ ) {
             se[i] += e[j * n + i]
           }
-          if (se[i] === 0 || se[i] === opts.convIterations) {
+          if ( se[i] === 0 || se[i] === opts.convIterations ) {
             sum++
           }
         }
 
-        if (sum === n) {
+        if ( sum === n ) {
           converged = true;
           break
         }
@@ -297,17 +296,17 @@
     var clusterIndices = assign( n, S, exemplarsIndices, nodes, id2position );
 
     var clusters = {};
-    for (var c = 0; c < exemplarsIndices.length; c++) {
+    for ( var c = 0; c < exemplarsIndices.length; c++ ) {
       clusters[ exemplarsIndices[c] ] = [];
     }
 
-    for (i = 0; i < nodes.length; i++) {
+    for (var i = 0; i < nodes.length; i++) {
       var pos = id2position[ nodes[i].id() ];
       var clusterIndex = clusterIndices[pos];
       clusters[ clusterIndex ].push( nodes[i] );
     }
     var retClusters = new Array(exemplarsIndices.length);
-    for (c = 0; c < exemplarsIndices.length; c++) {
+    for ( var c = 0; c < exemplarsIndices.length; c++ ) {
       retClusters[c] = cy.collection( clusters[ exemplarsIndices[c] ] );
     }
 

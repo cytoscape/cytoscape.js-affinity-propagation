@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cytoscape.js-affinity-propagation.git"
+    "url": "https://github.com/cytoscape/cytoscape.js-affinity-propagation.git"
   },
   "keywords": [
     "cytoscape",
@@ -19,9 +19,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cytoscape.js-affinity-propagation/issues"
+    "url": "https://github.com/cytoscape/cytoscape.js-affinity-propagation/issues"
   },
-  "homepage": "https://github.com/cytoscape.js-affinity-propagation",
+  "homepage": "https://github.com/cytoscape/cytoscape.js-affinity-propagation",
   "devDependencies": {
     "gulp": "^3.8.8",
     "gulp-jshint": "^1.8.5",
