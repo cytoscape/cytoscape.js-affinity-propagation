@@ -7,7 +7,12 @@
     preference: 'median', // suitability of a data point to serve as an exemplar
     damping: 0.8,         // damping factor between [0.5, 1)
     maxIterations: 1000,  // max number of iterations to run
-    convIterations: 100   // min number of iterations to run in order for clustering to stop
+    convIterations: 100,  // min number of iterations to run in order for clustering to stop
+    attributes: [         // functions to quantify the similarity between any two points
+      function(edge) {
+        return edge.data('weight');
+      }
+    ]
   };
 
   var setOptions = function( opts, options ) {
@@ -36,6 +41,14 @@
       return a - b;
     });
     return M;
+  };
+
+  var getSimilarity = function( edge, attributes ) {
+    var total = 0;
+    for ( var i = 0; i < attributes.length; i++ ) {
+      total += attributes[i]( edge );
+    }
+    return total;
   };
 
   var getPreference = function( S, preference, n ) { // larger preference = greater # of clusters
@@ -164,14 +177,17 @@
     // Initialize and build S similarity matrix
     S  = new Array(n2);
     for ( var i = 0; i < n2; i++ ) {
-      S[i] = -Infinity;
+      S[i] = -Infinity; // for cases where two data points shouldn't be linked together
     }
 
     for ( var e = 0; e < edges.length; e++ ) {
       var edge = edges[e];
       i = id2position[ edge.source().id() ];
       j = id2position[ edge.target().id() ];
-      S[i * n + j] = edge.data('weight');         // similarity values S(i,j) are retrieved from edge weights
+      if (S[i * n + j] === -Infinity) { // if first time
+        S[i * n + j] = 0;
+      }
+      S[i * n + j] += getSimilarity( edge, opts.attributes ); // similarity values S(i,j) are compounded & retrieved from edge weights
     }
 
     // Place preferences on the diagonal of S
