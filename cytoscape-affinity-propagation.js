@@ -182,8 +182,8 @@
 
     for ( var e = 0; e < edges.length; e++ ) {
       var edge = edges[e];
-      i = id2position[ edge.source().id() ];
-      j = id2position[ edge.target().id() ];
+      var i = id2position[ edge.source().id() ];
+      var j = id2position[ edge.target().id() ];
       if (S[i * n + j] === -Infinity) { // if first time
         S[i * n + j] = 0;
       }
