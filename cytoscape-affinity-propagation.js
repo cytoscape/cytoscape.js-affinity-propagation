@@ -12,7 +12,8 @@
       function(edge) {
         return edge.data('weight');
       }
-    ]
+    ],
+    testMode: false
   };
 
   var setOptions = function( opts, options ) {
@@ -158,7 +159,7 @@
 
     // Map each node to its position in node array
     var id2position = {};
-    for( i = 0; i < nodes.length; i++ ){
+    for( var i = 0; i < nodes.length; i++ ){
       id2position[ nodes[i].id() ] = i;
     }
 
